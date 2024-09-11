@@ -26,5 +26,7 @@ I analyzed the standard deviation to see how different factors, like plants and 
 
 On this page, I looked at the seasonality of concrete strength, showing how it gains more strength later in colder months and loses strength in warmer months.
 
-![Concrete Strength Seasonality](concrete-strength-analysis.png)
+![Concrete Strength Seasonality](concrete-strength-seasonality.png)
 
+
+Te seasonality analysis was inspired by the work of [Carlos Barboza](https://www.linkedin.com/in/merod/) and his [Youtube video](https://www.youtube.com/watch?v=WK5KE8HoEsA&list=WL&index=5&t=2758s).
