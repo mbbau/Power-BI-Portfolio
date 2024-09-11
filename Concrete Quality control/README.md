@@ -24,9 +24,13 @@ I analyzed the standard deviation to see how different factors, like plants and 
 
 ### Concrete Strength Seasonality
 
-On this page, I looked at the seasonality of concrete strength, showing how it gains more strength later in colder months and loses strength in warmer months.
+On this page, I analyzed the seasonality of concrete strength, showing how it gains more strength later in colder months and loses strength in warmer months. The analysis shows that when temperatures are lower and the strength grows more slowly, the concrete reaches higher values at 28 days on average. In contrast, when temperatures are higher and the strength increases more rapidly, the concrete reaches lower values at 28 days on average.
 
 ![Concrete Strength Seasonality](concrete-strength-seasonality.png)
 
-
 Te seasonality analysis was inspired by the work of [Carlos Barboza](https://www.linkedin.com/in/merod/) and his [Youtube video](https://www.youtube.com/watch?v=WK5KE8HoEsA&list=WL&index=5&t=2758s).
+
+## DAX Meassures
+
+### The Calendar Dimension
+
