@@ -30,7 +30,5 @@ On this page, I analyzed the seasonality of concrete strength, showing how it ga
 
 Te seasonality analysis was inspired by the work of [Carlos Barboza](https://www.linkedin.com/in/merod/) and his [Youtube video](https://www.youtube.com/watch?v=WK5KE8HoEsA&list=WL&index=5&t=2758s).
 
-## DAX Meassures
 
-### The Calendar Dimension
 
