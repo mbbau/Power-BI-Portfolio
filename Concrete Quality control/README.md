@@ -30,5 +30,16 @@ On this page, I analyzed the seasonality of concrete strength, showing how it ga
 
 Te seasonality analysis was inspired by the work of [Carlos Barboza](https://www.linkedin.com/in/merod/) and his [Youtube video](https://www.youtube.com/watch?v=WK5KE8HoEsA&list=WL&index=5&t=2758s).
 
+### Concrete Strength Distribution
 
+This page provides an in-depth analysis of concrete strength variations across different concrete families. It includes two key components:
+
+1. **Average Strength in Selected Period:** Displays the average concrete strength in MPa for a selected year, compared to the previous period. A moving average trend line allows for quick insight into strength fluctuations over time.
+
+2. **Strength Distribution RainCloud:** A RainCloud plot showing the distribution of concrete strength values in MPa. This visualization combines a density plot and a scatter plot, offering both an overview of the distribution’s shape and individual data points.
+
+By toggling between different concrete families (H08, H13, H17, etc.), the user can easily compare strength data across various types, providing a comprehensive understanding of concrete performance under different conditions.
+
+
+![concrete-strength-distribution](concrete-strength-distribution.png)
 
