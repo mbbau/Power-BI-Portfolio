@@ -1,7 +1,5 @@
 # Sales Dashboard
 
-# Sales Dashboard
-
 This project showcases an end-to-end Business Intelligence solution to analyze sales data. It includes the construction of an ETL process using SQL Stored Procedures to build a simplified Data Warehouse. From there, we define key metrics to evaluate and monitor sales performance. Finally, we design an interactive dashboard to visualize these insights and provide business context.
 
 ## Contents
@@ -50,6 +48,7 @@ The following diagram represents the model used in this project:
 
 Below is an overview of the fact and dimension tables included in the data model, along with the key columns and their data types:
 
+<pre> ```yaml
 tables:
   - name: fact_sales
     description: Fact table containing sales order details.
@@ -196,6 +195,8 @@ tables:
       - name: year_number
         type: INT
         description: Year (e.g. 2023).
+
+ ``` </pre>
 
 This marks the end of the modeling phase, where we defined a set of tables and relationships that allow us to answer key business questions related to the process under analysis.
 
