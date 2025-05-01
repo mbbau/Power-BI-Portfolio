@@ -228,3 +228,110 @@ After staging, dimension tables are built. For example, dim_customer is implemen
 The fact table (fact_sales) is populated last, using cleaned and enriched data from both staging and dimensions. Surrogate keys are used to ensure referential integrity and to reflect the correct version of each dimension record at the time of the transaction.
 
 This step-by-step process improves traceability, simplifies debugging, and mimics a real-world production ETL pipeline.
+
+## Implementing a Slowly Changing Dimension (Type 2)
+
+In this project, the dim_customer table was implemented as a Slowly Changing Dimension Type 2 (SCD2) to preserve historical changes in customer attributes over time.
+
+### Why SCD Type 2?
+
+Transactional systems only store the current version of each entity. However, in analytical scenarios, it’s often essential to understand how a customer's attributes—such as name, territory, or segment—have changed over time.
+For example, if a customer moves to a different territory, we still want to attribute past sales to the territory they belonged to at the time of each transaction.
+
+SCD Type 2 allows us to:
+
+* Retain historical versions of each customer record.
+* Track changes with effective date ranges (start_date, end_date) and a current flag (is_current).
+* Join facts with the correct dimension version based on transaction date.
+
+### How it was implemented
+
+Below is the stored procedure used to load dim_customer with SCD2 logic:
+
+``` sql
+
+USE AdventureWorksDW;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_load_dim_customer
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @today DATE = CAST(GETDATE() AS DATE);
+
+    -- Insert new customers not currently in the dimension
+    INSERT INTO dbo.dim_customer (
+        customer_id,
+        customer_name,
+        territory_id,
+        start_date,
+        end_date,
+        is_current
+    )
+    SELECT
+        sc.customer_id,
+        sc.customer_name,
+        sc.territory_id,
+        @today,
+        NULL,
+        1
+    FROM dbo.stg_customer sc
+    LEFT JOIN dbo.dim_customer dc
+        ON sc.customer_id = dc.customer_id AND dc.is_current = 1
+    WHERE dc.customer_id IS NULL;
+
+    -- Detect changes and close the current version
+    UPDATE dc
+    SET
+        end_date = @today,
+        is_current = 0
+    FROM dbo.dim_customer dc
+    INNER JOIN dbo.stg_customer sc
+        ON sc.customer_id = dc.customer_id
+    WHERE dc.is_current = 1
+      AND (
+          sc.customer_name <> dc.customer_name OR
+          ISNULL(sc.territory_id, -1) <> ISNULL(dc.territory_id, -1)
+      );
+
+    -- Insert new version for changed customers
+    INSERT INTO dbo.dim_customer (
+        customer_id,
+        customer_name,
+        territory_id,
+        start_date,
+        end_date,
+        is_current
+    )
+    SELECT
+        sc.customer_id,
+        sc.customer_name,
+        sc.territory_id,
+        @today,
+        NULL,
+        1
+    FROM dbo.stg_customer sc
+    INNER JOIN dbo.dim_customer dc
+        ON sc.customer_id = dc.customer_id
+    WHERE dc.is_current = 0
+      AND NOT EXISTS (
+          SELECT 1
+          FROM dbo.dim_customer dc2
+          WHERE dc2.customer_id = sc.customer_id
+            AND dc2.is_current = 1
+      );
+END;
+GO
+```
+
+This logic ensures that historical context is preserved and fact records can always be joined with the correct customer version.
+
+The following diagram illustrates how a Type 2 Slowly Changing Dimension (SCD2) works in practice.
+When an attribute of a customer changes (e.g., their state), a new row is added to the dimension table with updated values, a new surrogate key, and an updated effective date range.
+This allows historical transactions to remain linked to the correct version of the customer as it existed at the time of each order—preserving accurate analytical context over time.
+
+![SCD Type 2 Example](SCD_Type_2_Example.png)
+
+> 📚 *Figure adapted from* Christopher Adamson — *Star Schema: The Complete Reference* (McGraw-Hill, 2010).  
+> Used here for educational and illustrative purposes only.
