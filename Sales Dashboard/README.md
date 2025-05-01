@@ -48,7 +48,7 @@ The following diagram represents the model used in this project:
 
 Below is an overview of the fact and dimension tables included in the data model, along with the key columns and their data types:
 
-<pre> ```yaml
+```yaml
 tables:
   - name: fact_sales
     description: Fact table containing sales order details.
@@ -196,7 +196,7 @@ tables:
         type: INT
         description: Year (e.g. 2023).
 
- ``` </pre>
+ ```
 
 This marks the end of the modeling phase, where we defined a set of tables and relationships that allow us to answer key business questions related to the process under analysis.
 
@@ -207,3 +207,24 @@ Now that the data model has been established, the next step is to implement a se
 3. Store it in a new database (the data warehouse).
 
 This data warehouse becomes the foundation from which we can build reports and dashboards to track business performance in a consistent and optimized way.
+
+# Data Transformation and ETL Process
+
+To move the data from its original source to its final destination, we first need to create all the required tables. This was done by executing the scripts provided in the [queries_for_tables.sql](https://github.com/mbbau/Power-BI-Portfolio/blob/main/Sales%20Dashboard/SQL%20Queries/queries_for_tables.sql) file within the database. 
+
+To replicate a day-to-day ETL process, all data transformations were implemented using SQL stored procedures. Each procedure is designed to handle a specific step in the pipeline—from raw data extraction to final loading into the star schema model.
+
+You can explore all the transformation scripts in the following folder of this repository: [SQL Queries – Transformations](https://github.com/mbbau/Power-BI-Portfolio/tree/main/Sales%20Dashboard/SQL%20Queries/Stored%20Procedures).
+
+To ensure modularity and data quality, the process is executed in clearly defined stages:
+
+1. **Staging Layer**
+Raw data from the source system is loaded into staging tables. These tables replicate the structure of the original data but allow for controlled transformation without affecting the source.
+
+2. **Dimension Tables**
+After staging, dimension tables are built. For example, dim_customer is implemented as a Type 2 Slowly Changing Dimension (SCD), allowing us to preserve historical changes over time.
+
+3. **Fact Table**
+The fact table (fact_sales) is populated last, using cleaned and enriched data from both staging and dimensions. Surrogate keys are used to ensure referential integrity and to reflect the correct version of each dimension record at the time of the transaction.
+
+This step-by-step process improves traceability, simplifies debugging, and mimics a real-world production ETL pipeline.
