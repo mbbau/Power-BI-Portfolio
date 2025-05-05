@@ -15,10 +15,10 @@ BEGIN
         territory_group
     )
     SELECT
-        st.TerritoryID,
-        st.Name,
-        st.CountryRegionCode,
-        st.[Group]
-    FROM AdventureWorks2022.Sales.SalesTerritory st;
+        territory_id,
+        territory_name,
+        country_region_code,
+        territory_group
+    FROM dbo.stg_territory;
 END;
 GO
